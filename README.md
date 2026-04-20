@@ -1,49 +1,62 @@
-Loteria
+# 🎰 Lottery Generator & Results Tracker (PWA)
+## 📌 About the Project
 
-Este projeto tem como objetivo implementar uma aplicação web que simule Sorteio de Loteria.
+This project is a Progressive Web App (PWA) that simulates a lottery system, allowing users to generate random bets ("quick pick"), validate inputs, and explore lottery results.
 
-Endereço do projeto - https://github.com/MarciaStank/loteria2-pwa
+It was developed with a focus not only on functionality, but also on software quality, usability, and testability.
 
-Endereço de Deploy - GitHub Pages: https://marciastank.github.io/loteria2-pwa/
+## 🚀 Live Demo
 
-Endereço para o video explicativo no Youtube: https://www.youtube.com/watch?v=cGQqVQhZM1U
+- 🔗 Deploy: https://marciastank.github.io/loteria2-pwa/
+- 🎥 Demo Video: https://www.youtube.com/watch?v=cGQqVQhZM1U
+- 🎨 Prototype (Figma): https://www.figma.com/file/jB8tebTpq9ss0eA9RARj7T
 
-Endereço Protótipo: https://www.figma.com/file/jB8tebTpq9ss0eA9RARj7T/Untitled?type=design&node-id=1%3A2&mode=design&t=s3JOOh51upSGzME8-1
+## ✨ Features
+- Generate random lottery numbers (6 to 9 picks)
+- Input validation with regex
+- Responsive UI (mobile-first)
+- Navigation via routes
+- Data binding and component communication
+- API integration with async handling
+- Dynamic list rendering (ngFor, ngIf)
+- Data formatting using pipes
+  
+## 🧪 Quality & Testing
 
-Checklist:
+This project was designed with QA practices in mind:
 
-[x]Criar o repositório no GitHub com a estrutura do Gitflow, ou seja, branches main e develop.
+- Functional test scenarios defined
+- Input validation and edge case handling
+- Error feedback for invalid forms
+- Structure ready for test automation (Robot Framework / Playwright)
 
-[x]Usar componentes de algum framework CSS (Bootstrap, Materialize ou outro)
+## 📂 (Recommended) Add test cases in /docs
 
-[x]Apresentar as telas com layout responsivo usando ou não algum framework CSS.
+### 🛠️ Tech Stack
+- Angular
+- TypeScript
+- HTML / CSS
+- Bootstrap (or other CSS framework)
+- JSON Server (planned)
+  
+## 📂 Project Structure
 
-[x]Construir páginas web com o conceito de componentes.
+src/        → application source code  
+docs/       → documentation and test cases (to be added)  
 
-[x]Criar o layout da aplicação com componentes, ou seja, o cabeçalho e rodapé precisam ser componentes.
+## 📈 Improvements in Progress
 
-[x]Usar pelo menos dois tipos de data-binding (Interpolation, Property Binding, Event Binding e Two Way Data Binding).
+- Persist data using JSON Server
+- Add automated tests
+- Improve UX and accessibility
 
-[x]Passar dados via hierarquia de componentes, ou seja, usando @Input ou @Output.
+## 🎓 Academic Context
 
-[x]Mapear componentes à rotas no módulo de rotas.
+This project was originally developed in 2022 as part of the Frameworks course during a Postgraduate Specialization in Java.
 
-[x]Criar navegação entre páginas por meio de rotas.
+It has been improved and structured to demonstrate software quality practices, testing approach, and front-end development skills.
 
-[x]Passar dados entre componentes que representam diferentes telas via parâmetros de rotas.
+## 👩‍💻 Author
 
-[x]Validar campos do formulário com REGEX e apresentar os erros.
-
-[x]Desabilitar o botão de submit enquanto o formulário está inválido.
-
-[x]Fazer requisições a API com tratamento da resposta com Promises ou Observables.
-
-[ ]Cadastrar uma entidade no JSON Server.
-
-[x]Apresentar uma lista de dados com a diretiva estrutural ngFor.
-
-[x]Usar a diretiva ngIf
-
-[x]Formatar a apresentação de dados com Pipes.
-
-[x]Build e deploy da aplicação.
+- Developed by Marcia Stankiwich
+- QA Engineer with experience in mobile testing, automation and agile teams
