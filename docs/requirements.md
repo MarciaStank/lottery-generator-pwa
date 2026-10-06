@@ -1,12 +1,15 @@
 # Functional Requirements
 
-RF01 - Generate random lottery numbers  
-RF02 - Allow selection between 6 and 9 numbers  
-RF03 - Validate user input  
-RF04 - Display generated results  
+- RF01: Generate exactly six unique random integers between 1 and 60.
+- RF02: Display generated numbers on the result page.
+- RF03: Allow navigation from the lottery page to registration.
+- RF04: Require a valid name and email before enabling submission.
+- RF05: Display validation messages for invalid registration inputs.
+- RF06: Add valid registrations to the in-memory user list.
+- RF07: Clear registration fields after successful submission.
 
-# Non-Functional Requirements
+# Current Constraints
 
-RNF01 - Responsive interface  
-RNF02 - Input validation with feedback  
-RNF03 - Good performance and usability  
+- Lottery generation is simulated locally without an HTTP API.
+- Registrations are not persisted across page reloads.
+- Selecting between six and nine numbers is not implemented.
