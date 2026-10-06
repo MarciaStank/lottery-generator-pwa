@@ -1,41 +1,30 @@
 import { test, expect } from '@playwright/test';
+import { LotteryPage } from './pages/lottery.page';
+import { RegistrationPage } from './pages/registration.page';
 
 test('CT01 - displays the lottery home page', async ({ page }) => {
-  await page.goto('/');
+  const lottery = new LotteryPage(page);
 
-  await expect(
-    page.getByRole('heading', { name: 'Números Disponíveis:' })
-  ).toBeVisible();
+  await lottery.open();
 
-  await expect(
-    page.getByRole('button', { name: 'Sortear Números', exact: true })
-  ).toBeEnabled();
-
-  await expect(page.locator('.number-button')).toHaveCount(60);
-
-  await expect(page.locator('.number-button').first()).toHaveText('1');
-  await expect(page.locator('.number-button').last()).toHaveText('60');
+  await expect(lottery.heading).toBeVisible();
+  await expect(lottery.drawButton).toBeEnabled();
+  await expect(lottery.availableNumbers).toHaveCount(60);
+  await expect(lottery.availableNumbers.first()).toHaveText('1');
+  await expect(lottery.availableNumbers.last()).toHaveText('60');
 });
 
 test('CT02 - draws six unique numbers between 1 and 60', async ({ page }) => {
-  await page.goto('/');
+  const lottery = new LotteryPage(page);
 
-  await page
-    .getByRole('button', { name: 'Sortear Números', exact: true })
-    .click();
+  await lottery.open();
+  await lottery.drawNumbers();
 
   await expect(page).toHaveURL(/\/result\?numbers=/);
+  await expect(lottery.resultHeading).toBeVisible();
+  await expect(lottery.resultNumbers).toHaveCount(6);
 
-  await expect(
-    page.getByRole('heading', { name: 'Resultado do Sorteio' })
-  ).toBeVisible();
-
-  const resultButtons = page.locator('.result-button');
-
-  await expect(resultButtons).toHaveCount(6);
-
-  const numbers = (await resultButtons.allTextContents())
-    .map(text => Number(text.trim()));
+  const numbers = await lottery.getDrawnNumbers();
 
   expect(new Set(numbers).size).toBe(6);
 
@@ -47,82 +36,55 @@ test('CT02 - draws six unique numbers between 1 and 60', async ({ page }) => {
 });
 
 test('CT03 - navigates to the registration page', async ({ page }) => {
-  await page.goto('/');
+  const lottery = new LotteryPage(page);
+  const registration = new RegistrationPage(page);
 
-  await page
-    .getByRole('button', { name: 'Cadastrar', exact: true })
-    .click();
+  await lottery.open();
+  await lottery.openRegistration();
 
   await expect(page).toHaveURL(/\/cadastro$/);
-
-  await expect(
-    page.getByRole('heading', { name: 'Cadastro de Usuário', exact: true })
-  ).toBeVisible();
-
-  await expect(page.getByLabel('Nome:', { exact: true })).toBeVisible();
-  await expect(page.getByLabel('Email:', { exact: true })).toBeVisible();
-
-  await expect(
-    page.getByRole('button', { name: 'Enviar', exact: true })
-  ).toBeDisabled();
+  await expect(registration.heading).toBeVisible();
+  await expect(registration.nameInput).toBeVisible();
+  await expect(registration.emailInput).toBeVisible();
+  await expect(registration.submitButton).toBeDisabled();
 });
 
 test('CT04 - registers a valid user and displays it in the list', async ({ page }) => {
-  await page.goto('/cadastro');
+  const registration = new RegistrationPage(page);
 
-  await page.getByLabel('Nome:', { exact: true }).fill('Maria Teste');
-  await page.getByLabel('Email:', { exact: true }).fill('maria@example.com');
+  await registration.open();
+  await registration.fillForm('Maria Teste', 'maria@example.com');
 
-  const submitButton = page.getByRole('button', {
-    name: 'Enviar',
-    exact: true,
-  });
+  await expect(registration.submitButton).toBeEnabled();
+  await registration.submit();
 
-  await expect(submitButton).toBeEnabled();
-  await submitButton.click();
-
-  const registeredUser = page
-    .getByRole('row')
-    .filter({ hasText: 'maria@example.com' });
+  const registeredUser = registration.userRow('maria@example.com');
 
   await expect(registeredUser).toHaveCount(1);
   await expect(registeredUser).toContainText(/Maria Teste/i);
   await expect(registeredUser).toContainText('maria@example.com');
 
-  await expect(page.getByLabel('Nome:', { exact: true })).toBeEmpty();
-  await expect(page.getByLabel('Email:', { exact: true })).toBeEmpty();
-  await expect(submitButton).toBeDisabled();
+  await expect(registration.nameInput).toBeEmpty();
+  await expect(registration.emailInput).toBeEmpty();
+  await expect(registration.submitButton).toBeDisabled();
 });
 
 test('CT05 - rejects an invalid name and email', async ({ page }) => {
-  await page.goto('/cadastro');
+  const registration = new RegistrationPage(page);
 
-  const nameInput = page.getByLabel('Nome:', { exact: true });
-  const emailInput = page.getByLabel('Email:', { exact: true });
-  const submitButton = page.getByRole('button', {
-    name: 'Enviar',
-    exact: true,
-  });
+  await registration.open();
 
   // Nome inválido com e-mail válido.
-  await nameInput.fill('Maria123');
-  await emailInput.fill('maria@example.com');
+  await registration.fillForm('Maria123', 'maria@example.com');
 
-  await expect(
-    page.getByText('Digite um nome válido sem números.', { exact: true })
-  ).toBeVisible();
-
-  await expect(submitButton).toBeDisabled();
+  await expect(registration.invalidNameMessage).toBeVisible();
+  await expect(registration.submitButton).toBeDisabled();
 
   // Nome válido com e-mail inválido.
-  await nameInput.fill('Maria Teste');
-  await emailInput.fill('email-invalido');
-  await nameInput.click();
+  await registration.fillForm('Maria Teste', 'email-invalido');
+  await registration.nameInput.click();
 
-  await expect(
-    page.getByText('Digite um email válido.', { exact: true })
-  ).toBeVisible();
-
-  await expect(submitButton).toBeDisabled();
-  await expect(page.getByRole('cell')).toHaveCount(0);
+  await expect(registration.invalidEmailMessage).toBeVisible();
+  await expect(registration.submitButton).toBeDisabled();
+  await expect(registration.registeredCells).toHaveCount(0);
 });
